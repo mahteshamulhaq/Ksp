@@ -33,6 +33,13 @@ steps:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
+- task: IISWebAppDeploymentOnMachineGroup@0
+  displayName: 'IIS Web App Deploy'
+  inputs:
+    WebSiteName: '$(Parameters.WebsiteName)'
+    TakeAppOfflineFlag: True
+    XmlVariableSubstitution: True
+    
 - task: IISWebAppManagementOnMachineGroup@0
   displayName: 'IIS Web App Manage'
   inputs:
@@ -49,9 +56,3 @@ steps:
     ParentWebsiteNameForApplication: '$(Parameters.WebsiteName)'
     VirtualPathForApplication: '/$(Parameters.VirtualPathForApplication)'
     AppPoolName: '$(Parameters.AppPoolName)'
-- task: IISWebAppDeploymentOnMachineGroup@0
-  displayName: 'IIS Web App Deploy'
-  inputs:
-    WebSiteName: '$(Parameters.WebsiteName)'
-    TakeAppOfflineFlag: True
-    XmlVariableSubstitution: True
