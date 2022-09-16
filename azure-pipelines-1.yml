@@ -11,9 +11,9 @@ variables:
 
 resources:
  pipelines:
-     - pipeline: buildPipeline
+     - pipeline: 'buildPipeline'
        source: 'Build pipeline'
-       branch: 'main'
+       branch: 'master'
 
 stages:
   - stage: DeployWebsite
