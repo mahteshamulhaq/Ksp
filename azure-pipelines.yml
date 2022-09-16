@@ -12,8 +12,8 @@ pool:
 variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  solution: '**/ConsoleAppProcessHTML.sln'
-  project: '**/ConsoleAppProcessHTML.csproj'
+  solution: '**/Testproject.sln'
+  project: '**/Testproject.csproj'
 
 steps:
 - task: NuGetToolInstaller@1
