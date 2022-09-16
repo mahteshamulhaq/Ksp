@@ -45,7 +45,7 @@ steps:
     AddBinding: true
     Bindings: '$(Parameters.Bindings)'
     ParentWebsiteNameForVD: '$(Parameters.WebsiteName)'
-    VirtualPathForVD: '$(Parameters.VirtualPathForApplication)'
+    VirtualPathForVD: '/$(Parameters.VirtualPathForApplication)'
     ParentWebsiteNameForApplication: '$(Parameters.WebsiteName)'
-    VirtualPathForApplication: '$(Parameters.VirtualPathForApplication)'
+    VirtualPathForApplication: '/$(Parameters.VirtualPathForApplication)'
     AppPoolName: '$(Parameters.AppPoolName)'
