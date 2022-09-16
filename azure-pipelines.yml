@@ -42,3 +42,20 @@ stages:
          steps:
            - script: echo Running in the Dev environment as deployment job
              displayName: 'Dev based stage'
+- task: IISWebAppManagementOnMachineGroup@0
+  inputs:
+    IISDeploymentType: 'IISWebsite'
+    ActionIISWebsite: 'CreateOrUpdateWebsite'
+    WebsiteName: 'III'
+    WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot\III'
+    WebsitePhysicalPathAuth: 'WebsiteUserPassThrough'
+    AddBinding: true
+    Bindings: '8030'
+    CreateOrUpdateAppPoolForWebsite: true
+    ConfigureAuthenticationForWebsite: true
+    AppPoolNameForWebsite: 'III'
+    DotNetVersionForWebsite: 'v4.0'
+    PipeLineModeForWebsite: 'Integrated'
+    AppPoolIdentityForWebsite: 'ApplicationPoolIdentity'
+    AnonymousAuthenticationForWebsite: true
+    BasicAuthenticationForWebsite: true
