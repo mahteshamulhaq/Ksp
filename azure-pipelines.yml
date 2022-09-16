@@ -33,3 +33,19 @@ steps:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
+- task: IISWebAppManagementOnMachineGroup@0
+  displayName: 'IIS Web App Manage'
+  inputs:
+    AppPoolNameForWebsite: niceone
+    AppPoolNameForApplication: niceone
+    IISDeploymentType: IISWebApplication
+    ActionIISWebsite: CreateOrUpdateWebsite
+    WebsiteName: '$(Parameters.WebsiteName)'
+    WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot\HHH'
+    AddBinding: true
+    Bindings: '$(Parameters.Bindings)'
+    ParentWebsiteNameForVD: '$(Parameters.WebsiteName)'
+    VirtualPathForVD: '$(Parameters.VirtualPathForApplication)'
+    ParentWebsiteNameForApplication: '$(Parameters.WebsiteName)'
+    VirtualPathForApplication: '$(Parameters.VirtualPathForApplication)'
+    AppPoolName: '$(Parameters.AppPoolName)'
