@@ -36,8 +36,8 @@ steps:
 - task: IISWebAppManagementOnMachineGroup@0
   displayName: 'IIS Web App Manage'
   inputs:
-    AppPoolNameForWebsite: niceone
-    AppPoolNameForApplication: niceone
+    AppPoolNameForWebsite: HHH
+    AppPoolNameForApplication: HHH
     IISDeploymentType: IISWebApplication
     ActionIISWebsite: CreateOrUpdateWebsite
     WebsiteName: '$(Parameters.WebsiteName)'
@@ -49,3 +49,9 @@ steps:
     ParentWebsiteNameForApplication: '$(Parameters.WebsiteName)'
     VirtualPathForApplication: '/$(Parameters.VirtualPathForApplication)'
     AppPoolName: '$(Parameters.AppPoolName)'
+- task: IISWebAppDeploymentOnMachineGroup@0
+  displayName: 'IIS Web App Deploy'
+  inputs:
+    WebSiteName: '$(Parameters.WebsiteName)'
+    TakeAppOfflineFlag: True
+    XmlVariableSubstitution: True
