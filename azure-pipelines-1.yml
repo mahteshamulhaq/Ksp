@@ -12,7 +12,6 @@ variables:
 resources:
  pipelines:
      - pipeline: 'buildPipeline'
-       project: 'TestingCICDwithLocal'
        source: 'Build pipeline'
        branch: 'main'
 
