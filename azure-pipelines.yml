@@ -1,58 +1,44 @@
-# ASP.NET Core (.NET Framework)
-# Build and test ASP.NET Core projects targeting the full .NET Framework.
-# Add steps that publish symbols, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
-trigger:
-- master
+trigger: none
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: ubuntu-latest
 
-variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+stages:
+- stage: Tests
+  jobs:
+  - job: 
+    displayName: Unit tests
+    steps:
+    - script: echo simulate running your unit tests!
+      displayName: 'Run unit tests'
+  - job: 
+    displayName: UI tests
+    steps:
+    - script:  echo simulate running your ui tests!
+      displayName: 'Run unit tests'
 
-steps:
-- task: NuGetToolInstaller@1
+- stage: Build
+  dependsOn: [] # This will remove implicit dependency and run in parallel with the stage: Tests above 
+  jobs:
+  - job:
+    displayName: Build the application
+    steps:
+    - script: |
+        echo Running all builds commands...
+        echo ... commands successfully completed.
+      displayName: 'Run build scripts & tasks'
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
-
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
-- task: IISWebAppDeploymentOnMachineGroup@0
-  displayName: 'IIS Web App Deploy'
-  inputs:
-    WebSiteName: '$(Parameters.WebsiteName)'
-    TakeAppOfflineFlag: True
-    XmlVariableSubstitution: True
-    
-- task: IISWebAppManagementOnMachineGroup@0
-  displayName: 'IIS Web App Manage'
-  inputs:
-    AppPoolNameForWebsite: HHH
-    AppPoolNameForApplication: HHH
-    IISDeploymentType: IISWebApplication
-    ActionIISWebsite: CreateOrUpdateWebsite
-    WebsiteName: '$(Parameters.WebsiteName)'
-    WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot\HHH'
-    AddBinding: true
-    Bindings: '$(Parameters.Bindings)'
-    ParentWebsiteNameForVD: '$(Parameters.WebsiteName)'
-    VirtualPathForVD: '/$(Parameters.VirtualPathForApplication)'
-    ParentWebsiteNameForApplication: '$(Parameters.WebsiteName)'
-    VirtualPathForApplication: '/$(Parameters.VirtualPathForApplication)'
-    AppPoolName: '$(Parameters.AppPoolName)'
+- stage: Dev
+  dependsOn:
+  - Tests
+  - Build
+  jobs:
+  - deployment:
+    displayName: Dev deploy
+    environment: Dev
+    strategy:
+     runOnce:
+       deploy:
+         steps:
+           - script: echo Running in the Dev environment as deployment job
+             displayName: 'Dev based stage'
