@@ -1,61 +1,68 @@
-trigger: none
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- none
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'windows-latest'
+
+variables:
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  solution: '**/RoundTheCode.AzureTestProject.sln'
+  project: '**/RoundTheCode.AzureTestProject.csproj'
+
+steps:
+- task: NuGetToolInstaller@1
+  name: 'NuGetToolInstaller'
+  displayName: 'NuGet tool installer'
+
+- task: NuGetCommand@2
+  name: 'NuGetRestore'
+  displayName: 'NuGet restore packages'
+  inputs:
+    command: 'restore'
+    restoreSolution: '$(solution)'
+    feedsToUse: 'select'
+
+- task: DotNetCoreCLI@2
+  name: 'Tests'
+  displayName: 'Run tests'
+  inputs:
+    command: 'test'
+    projects: '$(solution)'
+    arguments: '--configuration $(BuildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  name: 'Publish'
+  displayName: 'Publish'
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: '$(project)'
+    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: false
 
 stages:
-- stage: Tests
-  jobs:
-  - job: 
-    displayName: Unit tests
-    steps:
-    - script: echo simulate running your unit tests!
-      displayName: 'Run unit tests'
-  - job: 
-    displayName: UI tests
-    steps:
-    - script:  echo simulate running your ui tests!
-      displayName: 'Run unit tests'
-
-- stage: Build
-  dependsOn: [] # This will remove implicit dependency and run in parallel with the stage: Tests above 
-  jobs:
-  - job:
-    displayName: Build the application
-    steps:
-    - script: |
-        echo Running all builds commands...
-        echo ... commands successfully completed.
-      displayName: 'Run build scripts & tasks'
-
-- stage: Dev
-  dependsOn:
-  - Tests
-  - Build
-  jobs:
-  - deployment:
-    displayName: Dev deploy
-    environment: Dev
-    strategy:
-     runOnce:
-       deploy:
-         steps:
-           - script: echo Running in the Dev environment as deployment job
-             displayName: 'Dev based stage'
-- task: IISWebAppManagementOnMachineGroup@0
-  inputs:
-    IISDeploymentType: 'IISWebsite'
-    ActionIISWebsite: 'CreateOrUpdateWebsite'
-    WebsiteName: 'III'
-    WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot\III'
-    WebsitePhysicalPathAuth: 'WebsiteUserPassThrough'
-    AddBinding: true
-    Bindings: '8030'
-    CreateOrUpdateAppPoolForWebsite: true
-    ConfigureAuthenticationForWebsite: true
-    AppPoolNameForWebsite: 'III'
-    DotNetVersionForWebsite: 'v4.0'
-    PipeLineModeForWebsite: 'Integrated'
-    AppPoolIdentityForWebsite: 'ApplicationPoolIdentity'
-    AnonymousAuthenticationForWebsite: true
-    BasicAuthenticationForWebsite: true
+  - stage: DeployWebsite
+    displayName: 'Deploy website'        
+    pool:
+      vmImage: windows-latest
+    
+    jobs:    
+    - deployment: DeployWebsite
+      displayName: 'Deploy website'
+      environment: 'Production.DAVE'
+      strategy:
+       runOnce:
+         deploy:           
+          steps:
+          - checkout: none
+          
+          - download: 'buildPipeline'
+            name: 'DownloadBuildArtifacts'            
+            displayName: 'Download build artifacts'
+            artifact: 'AzureTestProject'
