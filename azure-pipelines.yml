@@ -13,7 +13,7 @@ variables:
   solution: '**/Testproject.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  project: '**/Testproject.csproj'
+  project: '**/Testproject/Testproject.csproj'
   IISWebsiteName: 'AzureTestProject'
   
 
