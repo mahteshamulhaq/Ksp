@@ -20,3 +20,12 @@ steps:
     inputs:
       command: build
       projects: '**/*.csproj'
+  
+  - task: DotNetCoreCLI@2
+    displayName: 'Publish and zip'
+    inputs:
+      command: publish
+      publishWebProjects: False
+      projects: $(SolutionPath)
+      arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+      zipAfterPublish: True
