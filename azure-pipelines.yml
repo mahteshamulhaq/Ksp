@@ -15,31 +15,15 @@ variables:
   buildConfiguration: 'Release'
   project: '**/Testproject.csproj'
   IISWebsiteName: 'AzureTestProject'
+  
 
-steps:
-  - task: DotNetCoreCLI@2
-    displayName: Build
-    inputs:
-      command: build
-      projects: '**/*.csproj'
-
-  - task: DotNetCoreCLI@2
-    name: 'Publish'
-    displayName: 'Publish'
-    inputs:
-      command: 'publish'
-      publishWebProjects: false
-      projects: '$(project)'
-      arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-      zipAfterPublish: false
-
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      ArtifactName: 'drop'
-      publishLocation: 'Container'
-
-jobs:
+stages:
+  - stage: DeployWebsite
+    displayName: 'Deploy website'
+    pool:
+      vmImage: windows-latest
+    
+    jobs:
     - deployment: DeployWebsite
       displayName: 'Deploy website'
       environment: 'MySystem.TEO-AHTESHAM1'
@@ -47,7 +31,28 @@ jobs:
        runOnce:
            deploy:
             steps:
-               
+                - task: DotNetCoreCLI@2
+                  displayName: Build
+                  inputs:
+                    command: build
+                    projects: '**/*.csproj'
+
+                - task: DotNetCoreCLI@2
+                  name: 'Publish'
+                  displayName: 'Publish'
+                  inputs:
+                    command: 'publish'
+                    publishWebProjects: false
+                    projects: '$(project)'
+                    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+                    zipAfterPublish: false
+
+                - task: PublishBuildArtifacts@1
+                  inputs:
+                    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+                    ArtifactName: 'drop'
+                    publishLocation: 'Container'
+
                 - task: IISWebAppDeploymentOnMachineGroup@0
                   name: 'DeployIIS'
                   displayName: 'Deploy IIS website'                
@@ -55,4 +60,3 @@ jobs:
                     WebSiteName: '${{ variables.IISWebsiteName }}'
                     Package: '$(Pipeline.Workspace)\buildPipeline\drop\TestProject'
                     TakeAppOfflineFlag: true
-               
