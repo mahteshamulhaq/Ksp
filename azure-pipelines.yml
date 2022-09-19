@@ -22,16 +22,16 @@ steps:
       projects: '**/*.csproj'
 
   - task: DotNetCoreCLI@2
-    displayName: 'Publish and zip'
+    name: 'Publish'
+    displayName: 'Publish'
     inputs:
-      command: publish
-      publishWebProjects: False
-      projects: $(SolutionPath)
+      command: 'publish'
+      publishWebProjects: false
+      projects: '$(project)'
       arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-      zipAfterPublish: True
+      zipAfterPublish: false
 
   - task: PublishBuildArtifacts@1
-    displayName: 'Publish Build artifacts'
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
       ArtifactName: 'drop'
