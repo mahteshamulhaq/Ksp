@@ -47,23 +47,7 @@ jobs:
        runOnce:
            deploy:
             steps:
-                - checkout: none
-
-                - download: 'buildPipeline'
-                  name: 'DownloadBuildArtifacts'
-                  displayName: 'Download Build Artifacts'
-                  artifact: 'drop'
-                
-                - task: IISWebAppManagementOnMachineGroup@0
-                  name: 'StopIIS'
-                  displayName: 'Stop IIS website'
-                  inputs:
-                    IISDeploymentType: 'IISWebsite'
-                    ActionIISWebsite: 'StopWebsite'
-                    StartStopWebsiteName: '${{ variables.IISWebsiteName }}'
-
-                - script: echo '$(Pipeline.Workspace)\buildPipeline\drop\TestProject'
-
+               
                 - task: IISWebAppDeploymentOnMachineGroup@0
                   name: 'DeployIIS'
                   displayName: 'Deploy IIS website'                
@@ -71,11 +55,4 @@ jobs:
                     WebSiteName: '${{ variables.IISWebsiteName }}'
                     Package: '$(Pipeline.Workspace)\buildPipeline\drop\TestProject'
                     TakeAppOfflineFlag: true
-                
-                - task: IISWebAppManagementOnMachineGroup@0
-                  name: 'StartIIS'
-                  displayName: 'Start IIS website'                     
-                  inputs:
-                    IISDeploymentType: 'IISWebsite'
-                    ActionIISWebsite: 'StartWebsite'
-                    StartStopWebsiteName: '${{ variables.IISWebsiteName }}'
+               
