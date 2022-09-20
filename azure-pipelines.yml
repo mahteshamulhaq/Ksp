@@ -24,7 +24,7 @@ stages:
             displayName: 'dotnet restore'
             inputs:
               command: 'restore'
-              projects: '**/Testproject/*.cproj'
+              projects: '**\*.cproj'
           - task: DotNetCoreCLI@2
             displayName: 'dotnet build'
             inputs:
