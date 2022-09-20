@@ -48,23 +48,31 @@ stages:
   - stage: 'dev_Stage'
     displayName: 'build the stage'
     jobs:
-      - job: dev_agent
-        steps:
-        - task: DownloadBuildArtifacts@1
-          inputs:
-            buildType: 'current'
-            downloadType: 'single'
-            artifactName: 'drop'
-            downloadPath: '$(System.ArtifactStagingDirectory)'
-        
-        - task: IISWebAppDeploymentOnMachineGroup@0
-          name: 'DeployIIS'
-          displayName: 'Deploy IIS website'                
-          inputs:
-            WebSiteName: 'AzureTestProject'
-            #Package: '$(Pipeline.Workspace)\buildPipeline\drop\TestProject'
-            #Package: '$(System.ArtifactStagingDirectory)\drop\TestProject'
-            Package: '$(System.ArtifactStagingDirectory)\drop/Testproject.zip'
-            TakeAppOfflineFlag: true
+    
+      - deployment: DeployWebsite
+        displayName: 'Deploy website'
+        environment: 'MySystem.TEO-AHTESHAM1'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: none     
+
+                - task: DownloadBuildArtifacts@1
+                  inputs:
+                    buildType: 'current'
+                    downloadType: 'single'
+                    artifactName: 'drop'
+                    downloadPath: '$(System.ArtifactStagingDirectory)'
+                
+                - task: IISWebAppDeploymentOnMachineGroup@0
+                  name: 'DeployIIS'
+                  displayName: 'Deploy IIS website'                
+                  inputs:
+                    WebSiteName: 'AzureTestProject'
+                    #Package: '$(Pipeline.Workspace)\buildPipeline\drop\TestProject'
+                    #Package: '$(System.ArtifactStagingDirectory)\drop\TestProject'
+                    Package: '$(System.ArtifactStagingDirectory)\drop/Testproject.zip'
+                    TakeAppOfflineFlag: true
 
   
