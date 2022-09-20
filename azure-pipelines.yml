@@ -63,7 +63,8 @@ stages:
           inputs:
             WebSiteName: 'AzureTestProject'
             #Package: '$(Pipeline.Workspace)\buildPipeline\drop\TestProject'
-            Package: '$(System.ArtifactStagingDirectory)\drop\TestProject'
+            #Package: '$(System.ArtifactStagingDirectory)\drop\TestProject'
+            Package: '$(System.ArtifactStagingDirectory)\drop/Testproject.zip'
             TakeAppOfflineFlag: true
 
   
