@@ -35,9 +35,9 @@ stages:
           - task: DotNetCoreCLI@2
             displayName: 'dotnet publish'
             inputs:
-              command: 'publish'
+              command: publish
               publishWebProjects: true
-              arguments: '-c $(buildConfiguration) -0 $(Build.ArtifactStagingDirectory)'
+              arguments: '-c $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)'
           
           - task: PublishBuildArtifacts@1
             inputs:
