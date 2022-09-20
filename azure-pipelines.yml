@@ -29,14 +29,14 @@ stages:
             displayName: 'dotnet build'
             inputs:
               command: 'build'
-              projects: '**/Testproject/*.cproj'
+              projects: '**\*.csproj'
               arguments: '--configuration $(buildConfiguration)'
             
           - task: DotNetCoreCLI@2
             displayName: 'dotnet publish'
             inputs:
               command: 'publish'
-              projects: '**/*.cproj'
+              projects: '**\*.csproj'
               arguments: '-c $(buildConfiguration) -0 $(Build.ArtifactStagingDirectory)'
           
           - task: PublishBuildArtifacts@1
@@ -44,3 +44,17 @@ stages:
               PathtoPublish: '$(Build.ArtifactStagingDirectory)'
               ArtifactName: 'drop'
               publishLocation: 'Container'
+  
+  - stage: 'dev_Stage'
+    displayName: 'build the stage'
+    jobs:
+      - job: dev_agent
+        steps:
+        - task: DownloadBuildArtifacts@1
+          inputs:
+            buildType: 'current'
+            downloadType: 'single'
+            artifactName: 'drop'
+            downloadPath: '$(System.ArtifactsDirectory)'
+
+  
