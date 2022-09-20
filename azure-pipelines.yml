@@ -56,5 +56,13 @@ stages:
             downloadType: 'single'
             artifactName: 'drop'
             downloadPath: '$(System.ArtifactsDirectory)'
+        
+        - task: IISWebAppDeploymentOnMachineGroup@0
+          name: 'DeployIIS'
+          displayName: 'Deploy IIS website'                
+          inputs:
+            WebSiteName: 'AzureTestProject'
+            Package: '$(Pipeline.Workspace)\drop\TestProject'
+            TakeAppOfflineFlag: true
 
   
