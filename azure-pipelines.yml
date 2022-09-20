@@ -62,7 +62,8 @@ stages:
           displayName: 'Deploy IIS website'                
           inputs:
             WebSiteName: 'AzureTestProject'
-            Package: '$(Pipeline.Workspace)\buildPipeline\drop\TestProject'
+            #Package: '$(Pipeline.Workspace)\buildPipeline\drop\TestProject'
+            Package: '$(System.ArtifactStagingDirectory)\drop\TestProject'
             TakeAppOfflineFlag: true
 
   
